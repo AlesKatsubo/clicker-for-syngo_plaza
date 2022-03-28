@@ -1,5 +1,4 @@
 import pyautogui as p
-import keyboard as k
 import time
 
 p.PAUSE = 2.5
