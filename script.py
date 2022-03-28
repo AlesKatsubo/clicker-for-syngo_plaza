@@ -1,5 +1,8 @@
 import pyautogui as p
+import keyboard as k
 import time
+
+p.PAUSE = 2.5
 
 path = 'img\\'
 
@@ -7,38 +10,36 @@ test = path + 'test.png'
 
 delete = path + 'delete.png'
 delete_d = path + 'delete_not_active.png'
-delete_yes = path + 'delete_yes.png'
 sort_by_name = path + 'sort_by_name_rb.png'
+search_err = path + 'search_err.png'
+clear_all = path + 'clear_all.png'
+new_date = path + 'new_date.png'
+query = path + 'query.png'
 
 def find_btn(btn):
     """Функция поиска кнопки по изображению"""
-    btn_position = p.locateOnScreen(btn, confidence = 0.7)
+    btn_position = p.locateOnScreen(btn, confidence = 0.85)
     if btn_position == None:
-        print(f'button {btn} not found')
-        btn_position = False
-        return 
+        btn_position = p.locateOnScreen(btn, confidence = 0.85)
+        if btn_position == None:
+            print(f'button {btn} not found')
     else:
         p.moveTo(btn_position)
-        time.sleep(3)
         return btn_position
 
 def delete_one():
     """Функция удаления выбранного исследования"""
     # Нажимаю на кнопку "удалить"
     btn_delete = find_btn(delete)
-    p.click()
-    time.sleep(5)
+    p.click(btn_delete)
     # Подтверждаю удаление
-    btn_yes = find_btn(delete_yes)
-    if btn_yes == False:
-        btn_yes = find_btn(delete_yes)
-    p.click()
-    time.sleep(5)
-    
+    p.press('enter')
+   
 def delete_many():
     i = 0
     while i <= 48:
         delete_one()
+        print(i)
         i = i + 1
 
 def first_click():
@@ -59,14 +60,43 @@ def choice_one():
         field_name_left = field_name[0]
         field_name_top = field_name[1]
         p.click(field_name, button='right')
-        # Опускаюсь ниже
+        # Опускаюсь ниже и беру в лево
         lm = 60 # left move
         tm = 30 # top move
         p.moveTo(field_name_left+lm, field_name_top+tm)
         # Выбираю исследование
         p.click()
 
-def start():
+def searching_err():
+    """Функция сброса ошибки 'Превышено количество откликов запроса'"""
+    # Нажимаю ПКМ в центре ошибки
+    err = find_btn(search_err)
+    p.click(err, button='right')
+    err_left = err[0]
+    err_top= err[1]
+    # Опускаюсь ниже
+    tm = 220
+    lm = 200
+    p.moveTo(err_left + lm, err_top + tm)
+    p.click()
+
+def cleaning():
+    """Функция очистки полей"""
+    # Нахожу поле с именем
+    clear = find_btn(clear_all)
+    p.click(clear)
+ 
+def new_date_in():
+    """Функция устанавливает дату поиска и заупскает поиск"""
+    date = find_btn(new_date)
+    p.click(date)
+    p.write('12/31/2013')
+    p.press('enter')
+    p.press('enter')
+
+def search_del():
+    cleaning()
+    new_date_in()
     activation_btn = first_click()
     if activation_btn == False:
         choice_one()
@@ -74,4 +104,9 @@ def start():
     else:
         delete_many()
     
+
+def start():
+    while True:
+        search_del()
+
 start()
