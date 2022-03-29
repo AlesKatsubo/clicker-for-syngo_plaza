@@ -1,6 +1,5 @@
 import pyautogui as p
-import time
-
+import time 
 p.PAUSE = 2.5
 
 path = 'img\\'
@@ -13,6 +12,7 @@ sort_by_name = path + 'sort_by_name_rb.png'
 search_err = path + 'search_err.png'
 clear_all = path + 'clear_all.png'
 new_date = path + 'new_date.png'
+check_date = path + 'check_date.png'
 query = path + 'query.png'
 
 def find_btn(btn):
@@ -90,8 +90,14 @@ def new_date_in():
     date = find_btn(new_date)
     p.click(date)
     p.write('12/31/2013')
-    p.press('enter')
-    p.press('enter')
+    check = find_btn(check_date)
+    if check is not None:
+        p.press('enter')
+        p.press('enter')
+    else:
+        p.press('esc')
+        print('Не смог ввести дату')
+        time.sleep(436320)
 
 def search_del():
     cleaning()
