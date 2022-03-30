@@ -139,4 +139,4 @@ def start():
     while True:
         search_del()
 
-counting()
+start()
