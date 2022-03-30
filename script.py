@@ -1,5 +1,8 @@
 import pyautogui as p
-import time 
+import time
+import json
+
+
 p.PAUSE = 2.5
 
 path = 'img\\'
@@ -14,6 +17,16 @@ clear_all = path + 'clear_all.png'
 new_date = path + 'new_date.png'
 check_date = path + 'check_date.png'
 query = path + 'query.png'
+
+def counting():
+    with open('count.json', 'r+') as f:
+        count = int(json.load(f))
+        json.dump(0, f)
+        print(f'удалено: {count}')
+        count = count + 1
+    with open('count.json', 'w') as f:
+        json.dump(count, f)
+    
 
 def find_btn(btn):
     """Функция поиска кнопки по изображению"""
@@ -38,7 +51,7 @@ def delete_many():
     i = 0
     while i <= 48:
         delete_one()
-        print(i)
+        counting()
         i = i + 1
 
 def first_click():
@@ -126,4 +139,4 @@ def start():
     while True:
         search_del()
 
-start()
+counting()
