@@ -17,9 +17,9 @@ query = path + 'query.png'
 
 def find_btn(btn):
     """Функция поиска кнопки по изображению"""
-    btn_position = p.locateOnScreen(btn, confidence = 0.85)
+    btn_position = p.locateOnScreen(btn, confidence = 0.95)
     if btn_position == None:
-        btn_position = p.locateOnScreen(btn, confidence = 0.85)
+        btn_position = p.locateOnScreen(btn, confidence = 0.95)
         if btn_position == None:
             print(f'button {btn} not found')
     else:
@@ -84,20 +84,32 @@ def cleaning():
     # Нахожу поле с именем
     clear = find_btn(clear_all)
     p.click(clear)
- 
+
+def check():
+    print('Проверяю дату')
+    check = find_btn(check_date)
+    if check is not None:
+        print('дата верна')
+        return True
+    else:
+        print('не указана дата')
+        return False
+
 def new_date_in():
     """Функция устанавливает дату поиска и заупскает поиск"""
     date = find_btn(new_date)
     p.click(date)
+    print('Ввожу дату')
     p.write('12/31/2013')
-    check = find_btn(check_date)
-    if check is not None:
+    time.sleep(5)
+    checking = check()
+    if checking:
         p.press('enter')
         p.press('enter')
     else:
-        p.press('esc')
-        print('Не смог ввести дату')
-        time.sleep(436320)
+        time.sleep(5)
+        cleaning()
+        new_date_in()
 
 def search_del():
     cleaning()
